@@ -18,8 +18,18 @@ class UserServiceTest extends TestCase
         $this->userService = $this->app->make(UserService::class);
     }
 
-    public function testSample(): void
+    public function testLoginSuccess(): void
     {
-        self::assertTrue(true);
+        self::assertTrue($this->userService->login('pramudya', 'rahasia'));
+    }
+
+    public function testLoginUserNotFound(): void
+    {
+        self::assertFalse($this->userService->login('bimo', 'bimo'));
+    }
+
+    public function testLoginWrongPassword(): void
+    {
+        self::assertFalse($this->userService->login('pramudya', 'salah'));
     }
 }
