@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TodolistService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -25,9 +26,22 @@ class TodolistController extends Controller
         ]);
     }
 
-    public function saveTodo(Request $request)
+    public function saveTodo(Request $request): Response|RedirectResponse
     {
+        $todo = $request->input('todo');
 
+        if (empty($todo)) {
+            $todolist = $this->todolistService->getTodolist();
+
+            return response()->view('todolist.todolist', [
+                'title' => 'Todolist | Laravel Todolist',
+                'todolist' => $todolist,
+                'error' => 'Todo is required'
+            ]);
+        }
+
+        $this->todolistService->saveTodo(uniqid(), $todo);
+        return redirect()->action([TodolistController::class, 'todoList']);
     }
 
     public function removoTodo(Request $request, string $todoId)
