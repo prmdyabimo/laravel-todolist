@@ -9,7 +9,7 @@ class TodolistServiceImpl implements TodolistService
 {
     public function saveTodo(string $id, string $todo): void
     {
-        if(!Session::exists("todolist")) {
+        if (!Session::exists("todolist")) {
             Session::put("todolist", []);
         }
 
@@ -22,5 +22,21 @@ class TodolistServiceImpl implements TodolistService
     public function getTodolist(): array
     {
         return Session::get('todolist', []);
+    }
+
+    public function removeTodo(string $todoId)
+    {
+        $todolist = Session::get('todolist');
+
+        foreach ($todolist as $index => $value) {
+            if ($value['id'] == $todoId) {
+                // MENGAHAPUS TODO SESUAI DENGAN INDEXNYA
+                unset($todolist[$index]);
+                // MENGHENTIKAN PERULANGAN
+                break;
+            }
+        }
+
+        Session::put('todolist', $todolist);
     }
 }
